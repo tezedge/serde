@@ -80,6 +80,7 @@
 //! [FlexBuffers]: https://github.com/google/flatbuffers/tree/master/rust/flexbuffers
 //! [DynamoDB Items]: https://docs.rs/serde_dynamo
 //! [rusoto_dynamodb]: https://docs.rs/rusoto_dynamodb
+#![forbid(unsafe_code)]
 
 ////////////////////////////////////////////////////////////////////////////////
 

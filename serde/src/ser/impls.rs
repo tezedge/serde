@@ -650,29 +650,30 @@ macro_rules! serialize_display_bounded_length {
     }};
 }
 
-#[cfg(feature = "std")]
-impl Serialize for net::IpAddr {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        if serializer.is_human_readable() {
-            match *self {
-                net::IpAddr::V4(ref a) => a.serialize(serializer),
-                net::IpAddr::V6(ref a) => a.serialize(serializer),
-            }
-        } else {
-            match *self {
-                net::IpAddr::V4(ref a) => {
-                    serializer.serialize_newtype_variant("IpAddr", 0, "V4", a)
-                }
-                net::IpAddr::V6(ref a) => {
-                    serializer.serialize_newtype_variant("IpAddr", 1, "V6", a)
-                }
-            }
-        }
-    }
-}
+// TODO: Tezedge - remove unsafe usage
+// #[cfg(feature = "std")]
+// impl Serialize for net::IpAddr {
+//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+//     where
+//         S: Serializer,
+//     {
+//         if serializer.is_human_readable() {
+//             match *self {
+//                 net::IpAddr::V4(ref a) => a.serialize(serializer),
+//                 net::IpAddr::V6(ref a) => a.serialize(serializer),
+//             }
+//         } else {
+//             match *self {
+//                 net::IpAddr::V4(ref a) => {
+//                     serializer.serialize_newtype_variant("IpAddr", 0, "V4", a)
+//                 }
+//                 net::IpAddr::V6(ref a) => {
+//                     serializer.serialize_newtype_variant("IpAddr", 1, "V6", a)
+//                 }
+//             }
+//         }
+//     }
+// }
 
 #[cfg(feature = "std")]
 const DEC_DIGITS_LUT: &'static [u8] = b"\
@@ -720,28 +721,29 @@ fn test_format_u8() {
     }
 }
 
-#[cfg(feature = "std")]
-impl Serialize for net::Ipv4Addr {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        if serializer.is_human_readable() {
-            const MAX_LEN: usize = 15;
-            debug_assert_eq!(MAX_LEN, "101.102.103.104".len());
-            let mut buf = [b'.'; MAX_LEN];
-            let mut written = format_u8(self.octets()[0], &mut buf);
-            for oct in &self.octets()[1..] {
-                // Skip over delimiters that we initialized buf with
-                written += format_u8(*oct, &mut buf[written + 1..]) + 1;
-            }
-            // We've only written ASCII bytes to the buffer, so it is valid UTF-8
-            serializer.serialize_str(unsafe { str::from_utf8_unchecked(&buf[..written]) })
-        } else {
-            self.octets().serialize(serializer)
-        }
-    }
-}
+// TODO: Tezedge - remove unsafe usage
+// #[cfg(feature = "std")]
+// impl Serialize for net::Ipv4Addr {
+//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+//     where
+//         S: Serializer,
+//     {
+//         if serializer.is_human_readable() {
+//             const MAX_LEN: usize = 15;
+//             debug_assert_eq!(MAX_LEN, "101.102.103.104".len());
+//             let mut buf = [b'.'; MAX_LEN];
+//             let mut written = format_u8(self.octets()[0], &mut buf);
+//             for oct in &self.octets()[1..] {
+//                 // Skip over delimiters that we initialized buf with
+//                 written += format_u8(*oct, &mut buf[written + 1..]) + 1;
+//             }
+//             // We've only written ASCII bytes to the buffer, so it is valid UTF-8
+//             serializer.serialize_str(unsafe { str::from_utf8_unchecked(&buf[..written]) })
+//         } else {
+//             self.octets().serialize(serializer)
+//         }
+//     }
+// }
 
 #[cfg(feature = "std")]
 impl Serialize for net::Ipv6Addr {
@@ -759,45 +761,47 @@ impl Serialize for net::Ipv6Addr {
     }
 }
 
-#[cfg(feature = "std")]
-impl Serialize for net::SocketAddr {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        if serializer.is_human_readable() {
-            match *self {
-                net::SocketAddr::V4(ref addr) => addr.serialize(serializer),
-                net::SocketAddr::V6(ref addr) => addr.serialize(serializer),
-            }
-        } else {
-            match *self {
-                net::SocketAddr::V4(ref addr) => {
-                    serializer.serialize_newtype_variant("SocketAddr", 0, "V4", addr)
-                }
-                net::SocketAddr::V6(ref addr) => {
-                    serializer.serialize_newtype_variant("SocketAddr", 1, "V6", addr)
-                }
-            }
-        }
-    }
-}
+// TODO: Tezedge - remove unsafe usage
+// #[cfg(feature = "std")]
+// impl Serialize for net::SocketAddr {
+//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+//     where
+//         S: Serializer,
+//     {
+//         if serializer.is_human_readable() {
+//             match *self {
+//                 net::SocketAddr::V4(ref addr) => addr.serialize(serializer),
+//                 net::SocketAddr::V6(ref addr) => addr.serialize(serializer),
+//             }
+//         } else {
+//             match *self {
+//                 net::SocketAddr::V4(ref addr) => {
+//                     serializer.serialize_newtype_variant("SocketAddr", 0, "V4", addr)
+//                 }
+//                 net::SocketAddr::V6(ref addr) => {
+//                     serializer.serialize_newtype_variant("SocketAddr", 1, "V6", addr)
+//                 }
+//             }
+//         }
+//     }
+// }
 
-#[cfg(feature = "std")]
-impl Serialize for net::SocketAddrV4 {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        if serializer.is_human_readable() {
-            const MAX_LEN: usize = 21;
-            debug_assert_eq!(MAX_LEN, "101.102.103.104:65000".len());
-            serialize_display_bounded_length!(self, MAX_LEN, serializer)
-        } else {
-            (self.ip(), self.port()).serialize(serializer)
-        }
-    }
-}
+// TODO: Tezedge - remove unsafe usage
+// #[cfg(feature = "std")]
+// impl Serialize for net::SocketAddrV4 {
+//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+//     where
+//         S: Serializer,
+//     {
+//         if serializer.is_human_readable() {
+//             const MAX_LEN: usize = 21;
+//             debug_assert_eq!(MAX_LEN, "101.102.103.104:65000".len());
+//             serialize_display_bounded_length!(self, MAX_LEN, serializer)
+//         } else {
+//             (self.ip(), self.port()).serialize(serializer)
+//         }
+//     }
+// }
 
 #[cfg(feature = "std")]
 impl Serialize for net::SocketAddrV6 {
