@@ -1,6 +1,6 @@
 [package]
 name = "serde"
-version = "1.0.130" # remember to update html_root_url and serde_derive dependency
+version = "1.0.130-cleanup-unsafe-1" # remember to update html_root_url and serde_derive dependency
 authors = ["Erick Tryzelaar <erick.tryzelaar@gmail.com>", "David Tolnay <dtolnay@gmail.com>"]
 license = "MIT OR Apache-2.0"
 description = "A generic serialization/deserialization framework"
@@ -14,10 +14,10 @@ include = ["build.rs", "src/**/*.rs", "crates-io.md", "README.md", "LICENSE-APAC
 build = "build.rs"
 
 [dependencies]
-serde_derive = { version = "=1.0.130", optional = true, path = "../serde_derive" }
+serde_derive = { git = "https://github.com/tezedge/serde.git", tag = "v1.0.130-cleanup-unsafe-1", optional = true}
 
 [dev-dependencies]
-serde_derive = { version = "1.0", path = "../serde_derive" }
+serde_derive = { git = "https://github.com/tezedge/serde.git", tag = "v1.0.130-cleanup-unsafe-1" }
 
 [package.metadata.playground]
 features = ["derive", "rc"]

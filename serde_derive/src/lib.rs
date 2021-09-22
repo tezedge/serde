@@ -12,6 +12,7 @@
 //! Please refer to [https://serde.rs/derive.html] for how to set this up.
 //!
 //! [https://serde.rs/derive.html]: https://serde.rs/derive.html
+#![forbid(unsafe_code)]
 
 #![doc(html_root_url = "https://docs.rs/serde_derive/1.0.130")]
 #![allow(unknown_lints, bare_trait_objects)]
